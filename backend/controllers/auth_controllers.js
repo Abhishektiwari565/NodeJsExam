@@ -38,7 +38,8 @@ export const loginUser = async (req, res) => {
 
   res.cookie("token", token, { httpOnly: true });
 
-  res.json({ message: "Login Success" });
+  // Return token in response so frontend can store it (and still set httpOnly cookie)
+  res.json({ message: "Login Success", token });
 };
 
 // Logout Controller

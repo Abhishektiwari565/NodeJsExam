@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
 
 function AddRecipe() {
   const [title, setTitle] = useState("");
@@ -16,15 +16,7 @@ function AddRecipe() {
     }
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/recipes/add",
-        { title, description },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await API.post("/recipes/add", { title, description });
 
       alert("✅ Recipe Added Successfully");
       setTitle("");

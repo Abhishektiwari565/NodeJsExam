@@ -1,9 +1,9 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
@@ -13,12 +13,16 @@ function Login() {
     console.log("Login clicked");
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        { email, password }
-      );
+      // send username to match backend user model
+      const res = await API.post("/auth/login", { username, password });
 
-      localStorage.setItem("token", res.data.token);
+      const token = res?.data?.token;
+      if (token) {
+        localStorage.setItem("token", token);
+        console.log("TOKEN SAVED:", token);
+      } else {
+        console.log("No token in response", res.data);
+      }
 
       alert("✅ Login Successful");
       navigate("/add");
@@ -35,11 +39,11 @@ function Login() {
 
       <form onSubmit={handleLogin} className="card p-4 shadow">
         <input
-          type="email"
-          placeholder="Email"
+          type="text"
+          placeholder="Username"
           className="form-control mb-3"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
 
         <input
