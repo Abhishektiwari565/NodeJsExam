@@ -13,4 +13,4 @@ router.get("/", getAllRecipes);
 router.post("/add", authUser, addRecipe);
 router.get("/my", authUser, getMyRecipes);
 
-export default router;
+export default router;  

@@ -18,7 +18,7 @@ export const registerUser = async (req, res) => {
 
   await user.save();
 
-  res.json({ message: "Registered Successfully" });
+  res.json({ message: "Registered Successfully",user });
 };
 
 // Login Controller
