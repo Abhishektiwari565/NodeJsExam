@@ -1,30 +1,43 @@
 import { useState } from "react";
-import API from "../api/axios";
 import axios from "axios";
 
 function AddRecipe() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
 
-    await axios.post(
-  "http://localhost:5000/api/recipes/add",
-  { title, description },
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-);
+    if (!token) {
+      alert("❌ Please Login First");
+      return;
+    }
 
-    alert("Recipe Added");
-  }
+    try {
+      await axios.post(
+        "http://localhost:5000/api/recipes/add",
+        { title, description },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("✅ Recipe Added Successfully");
+      setTitle("");
+      setDescription("");
+
+    } catch (error) {
+      console.log(error);
+      alert("❌ Failed To Add Recipe");
+    }
+  };
+
   return (
-    <div className="container mt-4">
+    <div className="container mt-5">
       <h2>Add Recipe</h2>
 
       <form onSubmit={handleSubmit} className="card p-4 shadow">
@@ -32,16 +45,18 @@ function AddRecipe() {
           type="text"
           placeholder="Title"
           className="form-control mb-3"
+          value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
 
         <textarea
           placeholder="Description"
           className="form-control mb-3"
+          value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        <button className="btn btn-success">Add</button>
+        <button className="btn btn-success">Add Recipe</button>
       </form>
     </div>
   );
