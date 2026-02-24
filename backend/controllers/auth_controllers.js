@@ -5,6 +5,20 @@ import jwt from "jsonwebtoken";
 export const signup = async (req, res) => {
   try {
     const { username, password } = req.body;
+
+    // Validation
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: "Username and password are required" });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ success: false, message: "Password must be at least 6 characters" });
+    }
+
+    if (username.length < 3) {
+      return res.status(400).json({ success: false, message: "Username must be at least 3 characters" });
+    }
+
     const existingUser = await User.findOne({ username });
     if (existingUser)
       return res.status(400).json({ success: false, message: "User already exists" });
@@ -14,8 +28,8 @@ export const signup = async (req, res) => {
 
     return res.status(201).json({ success: true, message: "Signup successful" });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    console.error("Signup error:", err);
+    return res.status(500).json({ success: false, message: "Server error during signup" });
   }
 };
 
