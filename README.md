@@ -91,4 +91,11 @@ The app uses **JWT authentication**, **protected routes**, and **Bootstrap 5** f
 * **Signup/Login** – modern Bootstrap forms
 
 ---
+
 demo video:
+
+https://github.com/user-attachments/assets/03461ae8-21e2-4b26-894f-30252c2d6826
+
+
+
+
