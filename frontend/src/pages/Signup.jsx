@@ -2,35 +2,33 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
 
-function Login() {
+function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await API.post("/auth/login", { username, password });
-      const token = res?.data?.token;
+      const res = await API.post("/auth/signup", { username, password });
 
-      if (token) {
-        localStorage.setItem("token", token);
-        alert("✅ Login Successful");
-        navigate("/add");
+      if (res.data.success) {
+        alert("✅ Signup Successful! Please login.");
+        navigate("/login");
       } else {
-        alert("❌ Login Failed: Invalid credentials");
+        alert("❌ Signup Failed: " + res.data.message);
       }
     } catch (err) {
       console.error(err);
-      alert("❌ Login Failed: User not found or password incorrect");
+      alert("❌ Signup Failed: User may already exist");
     }
   };
 
   return (
     <div className="container mt-5">
-      <h2 className="mb-4">Login</h2>
-      <form onSubmit={handleLogin} className="card p-4 shadow">
+      <h2 className="mb-4">Signup</h2>
+      <form onSubmit={handleSignup} className="card p-4 shadow">
         <input
           type="text"
           placeholder="Username"
@@ -47,13 +45,13 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button className="btn btn-primary w-100">Login</button>
+        <button className="btn btn-success w-100">Signup</button>
       </form>
       <p className="mt-3 text-center">
-        Don't have an account? <a href="/signup">Signup here</a>
+        Already have an account? <a href="/login">Login here</a>
       </p>
     </div>
   );
 }
 
-export default Login;
+export default Signup;

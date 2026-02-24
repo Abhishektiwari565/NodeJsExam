@@ -7,31 +7,26 @@ function AddRecipe() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("❌ Please Login First");
-      return;
-    }
-
     try {
-      await API.post("/recipes/add", { title, description });
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("❌ Please login first");
+        return;
+      }
 
+      await API.post("/recipes/add", { title, description });
       alert("✅ Recipe Added Successfully");
       setTitle("");
       setDescription("");
-
-    } catch (error) {
-      console.log(error);
-      alert("❌ Failed To Add Recipe");
+    } catch (err) {
+      console.error(err);
+      alert("❌ Failed to Add Recipe");
     }
   };
 
   return (
     <div className="container mt-5">
-      <h2>Add Recipe</h2>
-
+      <h2 className="mb-4">Add Recipe</h2>
       <form onSubmit={handleSubmit} className="card p-4 shadow">
         <input
           type="text"
@@ -39,16 +34,16 @@ function AddRecipe() {
           className="form-control mb-3"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          required
         />
-
         <textarea
           placeholder="Description"
           className="form-control mb-3"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          required
         />
-
-        <button className="btn btn-success">Add Recipe</button>
+        <button className="btn btn-success w-100">Add Recipe</button>
       </form>
     </div>
   );

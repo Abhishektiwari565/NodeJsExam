@@ -1,22 +1,29 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
 
 function AllRecipes() {
   const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/recipes/all")
-      .then(res => setRecipes(res.data))
-      .catch(err => console.log(err));
+    const fetchRecipes = async () => {
+      try {
+        const res = await API.get("/recipes/all");
+        setRecipes(res.data);
+      } catch (err) {
+        console.error(err);
+        alert("❌ Failed to fetch recipes");
+      }
+    };
+    fetchRecipes();
   }, []);
 
   return (
     <div className="container mt-4">
-      <h2>All Recipes</h2>
+      <h2 className="mb-4">All Recipes</h2>
       <div className="row">
-        {recipes.map(recipe => (
-          <div className="col-md-4" key={recipe._id}>
-            <div className="card p-3 mb-3 shadow">
+        {recipes.map((recipe) => (
+          <div key={recipe._id} className="col-md-4">
+            <div className="card p-3 mb-3 shadow h-100">
               <h5>{recipe.title}</h5>
               <p>{recipe.description}</p>
             </div>

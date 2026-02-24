@@ -19,6 +19,15 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/recipes", recipeRoutes);
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error("Server error:", err);
+  res.status(err.status || 500).json({ 
+    message: err.message || "Internal server error",
+    error: process.env.NODE_ENV === "development" ? err : {}
+  });
+});
+
 app.listen(5000, () => {
   console.log("Server running on port 5000");
 });
