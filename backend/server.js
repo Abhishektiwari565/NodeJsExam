@@ -2,8 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import authRoutes from "./routes/auth.js";
-import recipeRoutes from "./routes/recipes.js";
+import authRoutes from "./routes/auth_routes.js";
+import recipeRoutes from "./routes/receipe_routes.js";
 
 dotenv.config();
 const app = express();

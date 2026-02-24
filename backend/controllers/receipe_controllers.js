@@ -1,4 +1,4 @@
-import Recipe from "../models/Recipe.js";
+import Recipe from "../models/receipe_models.js";
 
 // Add Recipe
 export const addRecipe = async (req, res) => {
