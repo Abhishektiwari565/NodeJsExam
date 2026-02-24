@@ -40,6 +40,7 @@ function Login() {
           required
         />
         <input
+        
           type="password"
           placeholder="Password"
           className="form-control mb-3"
