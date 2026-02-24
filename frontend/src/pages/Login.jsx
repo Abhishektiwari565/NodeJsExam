@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [username,setUsername] = useState("");
   const [password,setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async e => {
     e.preventDefault();
     try {
       const res = await API.post("/auth/login",{ username, password });
       const token = res?.data?.token;
-      if(token){
-        localStorage.setItem("token", token);
+      if (token) {
+        login(token);
         alert("✅ Login Successful");
         navigate("/add");
       } else {

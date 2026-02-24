@@ -3,11 +3,17 @@ import Recipe from "../models/receipe_models.js";
 // Add Recipe
 export const addRecipe = async (req, res) => {
   try {
-    const { title, description } = req.body;
-    const userId = req.user.id; // from auth middleware
+    const { title, description, authorName } = req.body;
+    const userId = req.user?.id; // from auth middleware (may be undefined)
 
-    const recipe = await Recipe.create({ title, description, user: userId });
-    return res.status(201).json({ success: true, recipe });
+    const recipeData = { title, description };
+    if (userId) recipeData.user = userId;
+    if (authorName) recipeData.authorName = authorName;
+
+    const recipe = await Recipe.create(recipeData);
+    // populate user field before returning so frontend can show author info
+    const populated = await recipe.populate("user", "username");
+    return res.status(201).json({ success: true, recipe: populated });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ success: false, message: "Server error" });

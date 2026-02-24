@@ -25,7 +25,7 @@ const AllRecipes = () => {
             <div className="card p-3 mb-3 shadow">
               <h5>{r.title}</h5>
               <p>{r.description}</p>
-              <small className="text-muted">By: {r.user?.username || "Unknown"}</small>
+              <small className="text-muted">By: {r.authorName || r.user?.username || "Unknown"}</small>
             </div>
           </div>
         ))}

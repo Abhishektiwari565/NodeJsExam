@@ -13,10 +13,7 @@ app.use(cors({ origin: ["http://localhost:5173", "http://localhost:3000"], crede
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect("mongodb://localhost:27017/recipeapp", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect("mongodb://localhost:27017/recipeapp")
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.error(err));
 
