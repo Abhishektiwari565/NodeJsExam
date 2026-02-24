@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 
-function Navbar() {
+const Navbar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -17,7 +17,6 @@ function Navbar() {
           <Link className="btn btn-outline-light me-2" to="/">All</Link>
           <Link className="btn btn-outline-light me-2" to="/add">Add</Link>
           <Link className="btn btn-outline-light me-2" to="/my">My</Link>
-
           {token ? (
             <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
           ) : (
@@ -30,6 +29,6 @@ function Navbar() {
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;

@@ -1,16 +1,11 @@
 import express from "express";
-import {
-  getAllRecipes,
-  addRecipe,
-  getMyRecipes
-} from "../controllers/receipe_controllers.js";
-
-import { authUser } from "../middleware/authMiddleware.js";
+import { addRecipe, getAllRecipes, getMyRecipes } from "../controllers/recipeController.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", getAllRecipes);
-router.post("/add", authUser, addRecipe);
-router.get("/my", authUser, getMyRecipes);
+router.post("/add", protect, addRecipe);
+router.get("/all", getAllRecipes);
+router.get("/my", protect, getMyRecipes);
 
-export default router;  
+export default router;

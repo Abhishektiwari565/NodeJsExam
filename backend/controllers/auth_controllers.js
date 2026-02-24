@@ -1,80 +1,37 @@
-import User from "../models/user_models.js";
+import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const SECRET = "mysecret";
-
-// Register Controller
-export const registerUser = async (req, res) => {
-  try {
-    const { username, password, role } = req.body;
-
-    // Validation
-    if (!username || !password) {
-      return res.status(400).json({ message: "Username and password are required" });
-    }
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ message: "Username already exists" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = new User({
-      username,
-      password: hashedPassword,
-      role: role || "user"
-    });
-
-    await user.save();
-
-    res.json({ message: "Registered Successfully", user });
-  } catch (err) {
-    console.error("Register error:", err);
-    res.status(500).json({ message: "Server error during registration" });
-  }
-};
-
-// Login Controller
-export const loginUser = async (req, res) => {
+export const signup = async (req, res) => {
   try {
     const { username, password } = req.body;
+    const existingUser = await User.findOne({ username });
+    if (existingUser)
+      return res.status(400).json({ success: false, message: "User already exists" });
 
-    // Validation
-    if (!username || !password) {
-      return res.status(400).json({ message: "Username and password are required" });
-    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await User.create({ username, password: hashedPassword });
 
-    const user = await User.findOne({ username });
-    if (!user) return res.status(400).json({ message: "User not found" });
-
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(400).json({ message: "Wrong password" });
-
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      SECRET
-    );
-
-    res.cookie("token", token, { httpOnly: true });
-
-    // Return token in response so frontend can store it (and still set httpOnly cookie)
-    res.json({ message: "Login Success", token });
+    return res.status(201).json({ success: true, message: "Signup successful" });
   } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({ message: "Server error during login" });
+    console.error(err);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-// Logout Controller
-export const logoutUser = (req, res) => {
+export const login = async (req, res) => {
   try {
-    res.clearCookie("token");
-    res.json({ message: "Logged Out" });
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "secret_key", { expiresIn: "1d" });
+    return res.json({ token });
   } catch (err) {
-    console.error("Logout error:", err);
-    res.status(500).json({ message: "Server error during logout" });
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
   }
 };

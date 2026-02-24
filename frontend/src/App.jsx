@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import AllRecipes from "./pages/AllRecipes";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 import AddRecipe from "./pages/AddRecipe";
 import MyRecipes from "./pages/MyRecipes";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import AllRecipes from "./pages/AllRecipes";
 
-function App() {
+const App = () => {
   const token = localStorage.getItem("token");
 
   return (
@@ -14,13 +14,13 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<AllRecipes />} />
+        <Route path="/signup" element={!token ? <Signup /> : <Navigate to="/add" />} />
+        <Route path="/login" element={!token ? <Login /> : <Navigate to="/add" />} />
         <Route path="/add" element={token ? <AddRecipe /> : <Navigate to="/login" />} />
         <Route path="/my" element={token ? <MyRecipes /> : <Navigate to="/login" />} />
-        <Route path="/login" element={!token ? <Login /> : <Navigate to="/add" />} />
-        <Route path="/signup" element={!token ? <Signup /> : <Navigate to="/add" />} />
       </Routes>
     </BrowserRouter>
   );
-}
+};
 
 export default App;
